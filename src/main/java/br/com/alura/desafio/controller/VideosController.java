@@ -1,5 +1,6 @@
 package br.com.alura.desafio.controller;
 
+import br.com.alura.desafio.controller.dto.VideosDto;
 import br.com.alura.desafio.domain.model.Videos;
 import br.com.alura.desafio.service.VideosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/videos")
@@ -18,26 +20,27 @@ public class VideosController {
     private VideosService videosService;
 
     @GetMapping
-    public ResponseEntity<List<Videos>> findAllVideos(){
+    public ResponseEntity<List<VideosDto>> findAllVideos(){
         var videos = videosService.findAll();
-        return ResponseEntity.ok(videos);
+        var videosDto = videos.stream().map(VideosDto::new).toList();
+        return ResponseEntity.ok(videosDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Videos> findVideoById(@PathVariable Long id){
+    public ResponseEntity<VideosDto> findVideoById(@PathVariable Long id){
         var video = videosService.findById(id);
-        return ResponseEntity.ok(video);
+        return ResponseEntity.ok(new VideosDto(video));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Videos> updateVideos(@PathVariable Long id, @RequestBody Videos video){
-        var videoUpdate = videosService.update(id, video);
-        return ResponseEntity.ok(videoUpdate);
+    public ResponseEntity<VideosDto> updateVideos(@PathVariable Long id, @RequestBody VideosDto video){
+        var videoUpdate = videosService.update(id, video.toModel());
+        return ResponseEntity.ok(new VideosDto(videoUpdate));
     }
 
     @PostMapping
-    public ResponseEntity<Videos> createVideo(@RequestBody Videos newVideo){
-        videosService.create(newVideo);
+    public ResponseEntity<Videos> createVideo(@RequestBody VideosDto video){
+        var newVideo = videosService.create(video.toModel());
         URI localtion = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(newVideo.getId())
