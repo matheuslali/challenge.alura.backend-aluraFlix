@@ -50,7 +50,7 @@ public class VideosController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVideo (@PathVariable Long id){
-        videosService.findById(id);
+        videosService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
