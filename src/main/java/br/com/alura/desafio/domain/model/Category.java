@@ -14,6 +14,12 @@ public class Category {
     private String title;
     private String color;
 
+    public Category(){
+        this.id = 1L;
+        this.title = "FREE";
+        this.color = "Grey";
+    }
+
 
     public Long getId() {
         return id;

@@ -1,9 +1,6 @@
 package br.com.alura.desafio.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +12,8 @@ public class Videos {
     private String title;
     private String description;
     private String url;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Category category;
 
     public Long getId() {
         return id;
@@ -23,6 +22,13 @@ public class Videos {
         this.id=id;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public String getTitle() {
         return title;
